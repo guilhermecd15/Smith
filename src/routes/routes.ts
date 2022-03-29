@@ -1,12 +1,22 @@
 import { Router } from 'express';
 import ProductsController from '../controllers/products';
 import validationProduct from '../middlewares/products';
+import UsersController from '../controllers/users';
+import validationUser from '../middlewares/users';
 
 const router = Router();
 
 const productsController = new ProductsController();
+const usersController = new UsersController();
 
 router.get('/products', productsController.getAll);
 router.post('/products', validationProduct, productsController.create);
+router.post(
+  '/users', 
+  validationUser.validationProperities,
+  validationUser.validationType,
+  validationUser.validationValues, 
+  usersController.create,
+);
 
 export default router;
