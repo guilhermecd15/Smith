@@ -3,11 +3,13 @@ import ProductsController from '../controllers/products';
 import validationProduct from '../middlewares/products';
 import UsersController from '../controllers/users';
 import validationUser from '../middlewares/users';
+import OrdersController from '../controllers/orders';
 
 const router = Router();
 
 const productsController = new ProductsController();
 const usersController = new UsersController();
+const ordersController = new OrdersController();
 
 router.get('/products', productsController.getAll);
 router.post('/products', validationProduct, productsController.create);
@@ -18,5 +20,7 @@ router.post(
   validationUser.validationValues, 
   usersController.create,
 );
+
+router.get('/orders', ordersController.getAll);
 
 export default router;
