@@ -1,21 +1,21 @@
 import { NextFunction, Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
-import Product from '../interfaces/products';
+import User from '../interfaces/users';
 
 const properties = ['Username', 'Classe', 'Level', 'Password'];
 const propertiesMin = [2, 2, 0, 7];
 
-function validateProperties(product: Product): [boolean, string | null] {
+function validateProperties(user: User): [boolean, string | null] {
   for (let i = 0; i < properties.length; i += 1) {
-    if (!Object.prototype.hasOwnProperty.call(product, properties[i].toLowerCase())) {
+    if (!Object.prototype.hasOwnProperty.call(user, properties[i].toLowerCase())) {
       return [false, properties[i]];
     }
   }
   return [true, null];
 }
 
-function validateTypeLevel(product: Product): [boolean, string | null] {
-  const entries = Object.entries(product);
+function validateTypeLevel(user: User): [boolean, string | null] {
+  const entries = Object.entries(user);
   for (let i = 0; i < entries.length; i += 1) {
     const [properity, value] = entries[i];
     const properityM = properity[0].toUpperCase() + properity.slice(1);
@@ -26,8 +26,8 @@ function validateTypeLevel(product: Product): [boolean, string | null] {
   return [true, null];
 }
 
-function validateType(product: Product): [boolean, string | null] {
-  const entries = Object.entries(product);
+function validateType(user: User): [boolean, string | null] {
+  const entries = Object.entries(user);
   for (let i = 0; i < entries.length; i += 1) {
     const [properity, value] = entries[i];
     const properityM = properity[0].toUpperCase() + properity.slice(1);
@@ -38,8 +38,8 @@ function validateType(product: Product): [boolean, string | null] {
   return [true, null];
 }
 
-function validateValuesLevel(product: Product): [boolean, string | null, number] {
-  const entries = Object.entries(product);
+function validateValuesLevel(user: User): [boolean, string | null, number] {
+  const entries = Object.entries(user);
   for (let i = 0; i < entries.length; i += 1) {
     const [properity, value] = entries[i];
     const properityM = properity[0].toUpperCase() + properity.slice(1);
@@ -51,8 +51,8 @@ function validateValuesLevel(product: Product): [boolean, string | null, number]
   return [true, null, 0];
 }
 
-function validateValues(product: Product): [boolean, string | null, number] {
-  const entries = Object.entries(product);
+function validateValues(user: User): [boolean, string | null, number] {
+  const entries = Object.entries(user);
   for (let i = 0; i < entries.length; i += 1) {
     const [properity, value] = entries[i];
     const properityM = properity[0].toUpperCase() + properity.slice(1);
@@ -65,9 +65,9 @@ function validateValues(product: Product): [boolean, string | null, number] {
 }
 
 function validationProperities(req: Request, res: Response, next: NextFunction) {
-  const product: Product = req.body;
+  const user: User = req.body;
 
-  const [valid, property] = validateProperties(product);
+  const [valid, property] = validateProperties(user);
 
   if (!valid) {
     return res.status(StatusCodes.BAD_REQUEST).json({ error: `${property} is required` });
@@ -77,9 +77,9 @@ function validationProperities(req: Request, res: Response, next: NextFunction) 
 }
 
 function validationType(req: Request, res: Response, next: NextFunction) {
-  const product: Product = req.body;
+  const user: User = req.body;
 
-  let [valid, property] = validateType(product);
+  let [valid, property] = validateType(user);
 
   if (!valid) {
     return res.status(StatusCodes.UNPROCESSABLE_ENTITY).json({
@@ -87,7 +87,7 @@ function validationType(req: Request, res: Response, next: NextFunction) {
     });
   }
 
-  [valid, property] = validateTypeLevel(product);
+  [valid, property] = validateTypeLevel(user);
 
   if (!valid) {
     return res.status(StatusCodes.UNPROCESSABLE_ENTITY).json({
@@ -99,9 +99,9 @@ function validationType(req: Request, res: Response, next: NextFunction) {
 }
 
 function validationValues(req: Request, res: Response, next: NextFunction) {
-  const product: Product = req.body;
+  const user: User = req.body;
 
-  let [valid, properityM, i] = validateValues(product);
+  let [valid, properityM, i] = validateValues(user);
 
   if (!valid) {
     return res.status(StatusCodes.UNPROCESSABLE_ENTITY).json({
@@ -109,7 +109,7 @@ function validationValues(req: Request, res: Response, next: NextFunction) {
     });
   }
 
-  [valid, properityM, i] = validateValuesLevel(product);
+  [valid, properityM, i] = validateValuesLevel(user);
 
   if (!valid) {
     return res.status(StatusCodes.UNPROCESSABLE_ENTITY).json({

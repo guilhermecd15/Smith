@@ -10,8 +10,8 @@ class ProductsService {
   }
 
   public async getAll(): Promise<Product[]> {
-    const Products = await this.model.getAll();
-    return Products;
+    const products = await this.model.getAll();
+    return products;
   }
 
   public create(product: Product): Promise<Product> {

@@ -9,6 +9,11 @@ class UsersService {
     this.model = new UsersModel(connection);
   }
 
+  public async getAll(): Promise<User[]> {
+    const users = await this.model.getAll();
+    return users;
+  }
+
   public create(user: User): Promise<User> {
     return this.model.create(user);
   }

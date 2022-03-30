@@ -17,6 +17,25 @@ class ProductsController {
 
     res.status(StatusCodes.CREATED).json({ token });
   };
+
+  public login = async (req: Request, res: Response) => {
+    const { username, password } = req.body;
+
+    const users = await this.usersService.getAll();
+    const user = users.find((u) => u.username === username);
+    
+    if (!user) {
+      return res.status(StatusCodes.UNAUTHORIZED).json({ error: 'Username or password invalid' });
+    }
+
+    if (user && user.password !== password) {
+      return res.status(StatusCodes.UNAUTHORIZED).json({ error: 'Username or password invalid' });
+    }
+
+    const token = jwt.sign({ data: user }, secret);
+
+    return res.status(StatusCodes.OK).json({ token });
+  };
 }
 
 export default ProductsController;
