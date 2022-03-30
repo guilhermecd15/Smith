@@ -1,6 +1,5 @@
 import { Pool, ResultSetHeader } from 'mysql2/promise';
 import Order from '../interfaces/orders';
-import Token from '../interfaces/token';
 
 export default class OrdersModel {
   public connection: Pool;
@@ -22,8 +21,8 @@ export default class OrdersModel {
     return rows as Order[];
   }
 
-  public async create(token: Token, products: number[]) {
-    const idUser = token.data.id;
+  public async create(userId: number, products: number[]) {
+    const idUser = userId;
     const result = await this.connection.execute<ResultSetHeader>(
       'INSERT INTO Trybesmith.Orders (userId) VALUES (?)',
       [idUser],

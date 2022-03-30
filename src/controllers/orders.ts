@@ -16,13 +16,17 @@ class OrdersController {
   public create = async (req: Request, res: Response) => {
     const { products } = req.body;
     const token = req.headers.authorization;
+    
+    if (typeof token !== 'string') {
+      return res.end();
+    } 
     const decoded = jwt.verify(token, secret);
 
     if (typeof decoded !== 'object') {
       return res.end();
     }
 
-    const userId = await this.ordersService.create(decoded, products);
+    const userId = await this.ordersService.create(decoded.data.id, products);
     const objOrder = {
       userId,
       products,

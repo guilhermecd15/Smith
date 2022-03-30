@@ -1,7 +1,6 @@
 import connection from '../models/connection';
 import OrdersModel from '../models/orders';
 import Order from '../interfaces/orders';
-import Token from '../interfaces/token';
 
 class OrdersService {
   public model: OrdersModel;
@@ -15,8 +14,8 @@ class OrdersService {
     return orders;
   }
 
-  public create(token: Token, products: number[]): Promise<void | number> {
-    return this.model.create(token, products);
+  public create(userId: number, products: number[]): Promise<void | number> {
+    return this.model.create(userId, products);
   }
 }
 
