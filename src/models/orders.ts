@@ -1,14 +1,15 @@
-import { Pool } from 'mysql2/promise';
-import Orders from '../interfaces/orders';
+import { Pool, ResultSetHeader } from 'mysql2/promise';
+import Order from '../interfaces/orders';
+import Token from '../interfaces/token';
 
-export default class ProductModel {
+export default class OrdersModel {
   public connection: Pool;
 
   constructor(connection: Pool) {
     this.connection = connection;
   }
 
-  public async getAll(): Promise<Orders[]> {
+  public async getAll(): Promise<Order[]> {
     const query1 = 'SELECT o.id, o.userId, JSON_ARRAYAGG(p.id) as products FROM Trybesmith.Orders ';
     const query2 = 'as o JOIN Trybesmith.Products as p WHERE p.orderId = o.id GROUP BY o.id ';
     const query3 = 'ORDER BY o.userId; ';
@@ -18,6 +19,25 @@ export default class ProductModel {
     const result = await this.connection
       .execute(query);
     const [rows] = result;
-    return rows as Orders[];
+    return rows as Order[];
+  }
+
+  public async create(token: Token, products: number[]) {
+    const idUser = token.data.id;
+    const result = await this.connection.execute<ResultSetHeader>(
+      'INSERT INTO Trybesmith.Orders (userId) VALUES (?)',
+      [idUser],
+    );
+    const [dataInserted] = result;
+    const { insertId } = dataInserted;
+    products.forEach(async (p) => {
+      await this.connection
+        .execute<ResultSetHeader>(
+        'UPDATE Trybesmith.Products SET orderId = ? where id = ?',
+        [insertId, p],
+      );
+    });
+
+    return idUser;
   }
 }

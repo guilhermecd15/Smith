@@ -5,6 +5,7 @@ import UsersController from '../controllers/users';
 import validationUser from '../middlewares/users';
 import OrdersController from '../controllers/orders';
 import validationLogin from '../middlewares/login';
+import validationOrder from '../middlewares/orders';
 
 const router = Router();
 
@@ -15,14 +16,19 @@ const ordersController = new OrdersController();
 router.get('/products', productsController.getAll);
 router.post('/products', validationProduct, productsController.create);
 router.post(
-  '/users', 
+  '/users',
   validationUser.validationProperities,
   validationUser.validationType,
-  validationUser.validationValues, 
+  validationUser.validationValues,
   usersController.create,
 );
-
 router.get('/orders', ordersController.getAll);
+router.post(
+  '/orders', 
+  validationOrder.validationToken,
+  validationOrder.validationProducts, 
+  ordersController.create,
+);
 router.post('/login', validationLogin, usersController.login);
 
 export default router;
