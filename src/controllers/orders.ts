@@ -19,7 +19,7 @@ class OrdersController {
     const decoded = jwt.verify(token, secret);
 
     if (typeof decoded !== 'object') {
-      return res.json({ erro: 'deu ruim famalia' });
+      return res.end();
     }
 
     const userId = await this.ordersService.create(decoded, products);
